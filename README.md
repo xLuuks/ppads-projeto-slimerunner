@@ -1,3 +1,3 @@
 # Projeto de Prática Profissional em ADS
-## Grupo: Eduardo Afonso P. Ferreira , Bruno Otavio Ramos, João Rinaldo Franca Neris, Lucas Augusto Correia Alves
+## Grupo: Eduardo Afonso P. Ferreira , Bruno Otavio Ramos, João Rinaldo Franca Neris, Lucas Augusto Correia Alves, Rodrigo Luiz Gomes da Silva.
 ### Nome do Projeto: Slime Runner - Corrida na Floresta
