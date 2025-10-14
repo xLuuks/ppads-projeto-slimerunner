@@ -9,22 +9,23 @@ class Player:
     def __init__(self, x: int, y: int):
         self.rect = pygame.Rect(x, y, self.LARG, self.ALT)
         self.vel_y = 0.0
-        self.em_chao = False
+        self.no_chao = False
+        self.imagemPlayer = pygame.image.load("")
 
     # ação de pulo (acionada uma vez no KEYDOWN)
     def pular(self):
-        if self.em_chao:
+        if self.no_chao:
             self.vel_y = FORCA_PULO
-            self.em_chao = False
+            self.no_chao = False
 
     # movimento horizontal contínuo via teclas pressionadas
-    def mover_horizontal(self, dt: float, dir_x: float):
-        self.rect.x += int(dir_x * VEL_HORIZONTAL * dt)
+    def mover_horizontal(self, tempo_decorrido: float, dir_x: float):
+        self.rect.x += int(dir_x * VEL_HORIZONTAL * tempo_decorrido)
 
-    def atualizar(self, dt: float):
+    def atualizar(self, tempo_decorrido: float):
         # gravidade + chão
-        self.vel_y += GRAVIDADE * dt
-        self.rect.y += int(self.vel_y * dt)
+        self.vel_y += GRAVIDADE * tempo_decorrido
+        self.rect.y += int(self.vel_y * tempo_decorrido)
         if self.rect.bottom >= self.CHAO_Y:
             self.rect.bottom = self.CHAO_Y
             self.vel_y = 0.0
