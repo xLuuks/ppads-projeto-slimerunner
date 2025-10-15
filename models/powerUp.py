@@ -1,7 +1,7 @@
 import random
 import pygame
 from typing import Optional, Tuple, List, Dict
-from settings import LARGURA, COR_OBST
+from settings import *
 from models.player import Player
 
 # nomes oficiais
@@ -40,7 +40,7 @@ class PowerUp:
 
     def desenhar(self, tela: pygame.Surface):
         # mesma cor dos obstáculos
-        pygame.draw.circle(tela, COR_OBST, self.rect.center, self.RADIUS)
+        pygame.draw.circle(tela, COR_POWERUP, self.rect.center, self.RADIUS)
 
     def coletar(self, status, player) -> Optional[Tuple[float, float]]:
         """
