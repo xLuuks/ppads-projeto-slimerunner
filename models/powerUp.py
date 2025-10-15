@@ -1,104 +1,93 @@
-# models/powerUp.py
 import random
 import pygame
-from typing import Optional, Dict, List, Tuple
-from settings import LARGURA
+from typing import Optional, Tuple, List, Dict
+from settings import LARGURA, COR_OBST
 from models.player import Player
 
-# -------- nomes oficiais (use para aparecer no HUD) --------
+# nomes oficiais
 INVENCIVEL = "invencibilidade"
 TAM_MAIOR  = "aumento_tamanho"
 TAM_MENOR  = "reducao_tamanho"
 VEL_MENOR  = "reducao_velocidade"
 VEL_MAIOR  = "aumento_velocidade"
 
-# catálogo (cores só para fallback visual; troque por ícones quando quiser)
-CATALOGO_POWER: Dict[str, Dict] = {
-    INVENCIVEL: {"dur": 3.0, "cor": (80, 200, 255)},     # i-frames
-    TAM_MAIOR:  {"dur": 6.0, "cor": (255, 150, 60)},     # ~+30% tamanho
-    TAM_MENOR:  {"dur": 6.0, "cor": (160, 200, 255)},    # ~-25% tamanho
-    VEL_MENOR:  {"dur": 5.0, "cor": (255, 210, 90)},     # mundo 0.75x
-    VEL_MAIOR:  {"dur": 5.0, "cor": (120, 255, 120)},    # mundo 1.25x
+# catálogo: só duração (cor vem de COR_OBST para ficar igual ao obstáculo)
+CATALOGO_DUR: Dict[str, float] = {
+    INVENCIVEL: 4.0,    # i-frames um pouco maiores
+    TAM_MAIOR:  10.0,   # ↑ tamanho dura mais
+    TAM_MENOR:  10.0,   # ↓ tamanho dura mais
+    VEL_MENOR:  6.0,    # mundo mais lento
+    VEL_MAIOR:  6.0,    # mundo mais rápido
 }
+TODOS_EFEITOS = [INVENCIVEL, TAM_MAIOR, TAM_MENOR, VEL_MENOR, VEL_MAIOR]
+
 
 class PowerUp:
-    """
-    Item coletável.
-    - Efeitos de tamanho são aplicados direto no Player (usam set_size_mult/reset).
-    - Invencibilidade é aplicada no Status (i-frames).
-    - Efeitos de velocidade retornam um multiplicador para o game.py aplicar no "mundo".
-    """
+    """Coletável genérico: visual igual ao obstáculo; efeito é decidido no momento da coleta (RNG)."""
     RADIUS = 16
-    VEL_X = 250.0  # px/s
 
-    def __init__(self, tipo: str, x: int):
-        if tipo not in CATALOGO_POWER:
-            raise ValueError(f"PowerUp desconhecido: {tipo}")
-        self.tipo = tipo
-        self.duracao = float(CATALOGO_POWER[tipo]["dur"])
-        self.cor = CATALOGO_POWER[tipo]["cor"]
-        # flutua um pouco acima do chão
+    def __init__(self, x: int):
         y = Player.CHAO_Y - 60
         self.rect = pygame.Rect(x - self.RADIUS, y - self.RADIUS, self.RADIUS * 2, self.RADIUS * 2)
         self.ativo = True
+        # velocidade é sincronizada pelo game.py a cada frame (não fixa aqui)
+        self.vel_x = 0.0
 
-    # --------------- ciclo ---------------
     def atualizar(self, dt: float):
-        self.rect.x -= int(self.VEL_X * dt)
+        self.rect.x -= int(self.vel_x * dt)
         if self.rect.right < 0:
             self.ativo = False
 
     def desenhar(self, tela: pygame.Surface):
-        pygame.draw.circle(tela, self.cor, self.rect.center, self.RADIUS)
+        # mesma cor dos obstáculos
+        pygame.draw.circle(tela, COR_OBST, self.rect.center, self.RADIUS)
 
-    # --------------- coleta / efeito ---------------
     def coletar(self, status, player) -> Optional[Tuple[float, float]]:
         """
-        Aplica efeitos imediatos.
-        Retorna (world_speed_mult, duracao) para o game.py aplicar no mundo
-        quando o power-up for de velocidade; caso contrário retorna None.
+        Decide um efeito aleatório e aplica.
+        Retorna (world_speed_mult, duracao) se for power de velocidade, senão None.
         """
-        # todos aparecem no HUD via Status
-        status.conceder_powerup(self.tipo, self.duracao)
+        tipo = random.choice(TODOS_EFEITOS)
+        dur = CATALOGO_DUR[tipo]
 
-        if self.tipo == INVENCIVEL:
-            # invulnerável (i-frames) controlado pelo Status
+        # Registra para HUD/Status
+        status.conceder_powerup(tipo, dur)
+
+        if tipo == INVENCIVEL:
             status.invulneravel = True
-            status._invuln_restante = max(status._invuln_restante, self.duracao)
+            status._invuln_restante = max(status._invuln_restante, dur)
+            return None
 
-        elif self.tipo == TAM_MAIOR:
-            # ~+30% do tamanho atual
+        if tipo == TAM_MAIOR:
             mult = getattr(player, "size_mult", 1.0) * 1.3
             if hasattr(player, "set_size_mult"):
                 player.set_size_mult(mult)
+            return None
 
-        elif self.tipo == TAM_MENOR:
-            # ~-25% do tamanho atual
+        if tipo == TAM_MENOR:
             mult = getattr(player, "size_mult", 1.0) * 0.75
             if hasattr(player, "set_size_mult"):
                 player.set_size_mult(mult)
+            return None
 
-        elif self.tipo == VEL_MENOR:
-            return (0.75, self.duracao)  # mundo mais lento (dur segundos)
+        if tipo == VEL_MENOR:
+            return (0.75, dur)
 
-        elif self.tipo == VEL_MAIOR:
-            return (1.25, self.duracao)  # mundo mais rápido (dur segundos)
+        if tipo == VEL_MAIOR:
+            return (1.25, dur)
 
-        # para os demais, nada a retornar
         return None
 
 
 class SpawnerPowerUp:
-    """Spawna power-ups com baixa frequência e posição segura."""
+    """Spawna power-ups com baixa frequência. O efeito só é decidido na coleta."""
     def __init__(self, intervalo_base: float = 9.0):
         self.intervalo_base = intervalo_base
         self.timer = 0.0
-        self.tipos: List[str] = list(CATALOGO_POWER.keys())
 
     def atualizar(self, dt: float, lista_powerups: List[PowerUp]):
         self.timer -= dt
         if self.timer <= 0:
             self.timer = self.intervalo_base + random.uniform(3, 6)
-            tipo = random.choice(self.tipos)
             x = LARGURA + random.randint(220, 420)
-            lista_powerups.append(PowerUp(tipo, x))
+            lista_powerups.append(PowerUp(x))

@@ -45,15 +45,14 @@ class Jogo:
         # Status do jogo (vidas, pontos, invulnerável, power-ups)
         self.status = Status(vidas_iniciais=3)
 
-        # HUD extras (timer central)
-        self.timer_total = 90.0
-        self.timer_restante = self.timer_total
+        # Timer CRESCENTE (runner infinito)
+        self.timer_crescente = 0.0
 
         # Dificuldade baseada no tempo da PARTIDA
         self.t0_ms = pygame.time.get_ticks()
         self.dificuldade = 1.0
 
-        # Velocidade global do “mundo” (afeta cenário/obstáculos)
+        # Velocidade global do “mundo” (afeta cenário/obstáculos/power-ups)
         self.world_speed_mult = 1.0
 
     # ---------------- LOOP PRINCIPAL ----------------
@@ -109,68 +108,70 @@ class Jogo:
         if self.estado != ESTADO_JOGANDO or self.pause:
             return
 
-        # cenário + player (cenário usa a velocidade global)
+        # 1) CENÁRIO com velocidade global
         self.cenario.atualizar(tempo_decorrido, velocidade_base=300 * self.world_speed_mult)
+
+        # 2) PLAYER
         self.player.mover_horizontal(tempo_decorrido, self.dir_x)
         self.player.atualizar(tempo_decorrido)
 
-        # dificuldade baseada no tempo da PARTIDA
+        # 3) DIFICULDADE por tempo de PARTIDA
         elapsed_min = (pygame.time.get_ticks() - self.t0_ms) / 60000.0
         self.dificuldade = max(1.0, 1.0 + elapsed_min)
 
-        # obstáculos (spawner recebe dificuldade * velocidade global)
+        # 4) OBSTÁCULOS — sincronizar velocidade com o mundo
         self.spawner.atualizar(tempo_decorrido, self.dificuldade * self.world_speed_mult, self.obstaculos)
         for obst in self.obstaculos[:]:
+            # garanta velocidade consistente (caso a classe use atributo interno)
+            if hasattr(obst, "velocidade"):
+                obst.velocidade = 300 * self.world_speed_mult
             obst.atualizar(tempo_decorrido)
             if obst.saiu_da_tela():
                 self.obstaculos.remove(obst)
                 self.status.adicionar_pontos(10)
 
-        # colisão com obstáculos
+        # 5) POWER-UPS — mesma velocidade do mundo + RNG na coleta
+        self.spawner_power.atualizar(tempo_decorrido, self.powerups_ativos)
+        for pu in self.powerups_ativos[:]:
+            pu.vel_x = 300 * self.world_speed_mult
+            pu.atualizar(tempo_decorrido)
+
+            if pu.rect.colliderect(self.player.rect):
+                efeito = pu.coletar(self.status, self.player)  # decide efeito aqui (RNG)
+                pu.ativo = False
+                if efeito is not None:
+                    mult, dur = efeito  # (0.75/1.25, duração)
+                    self.world_speed_mult = mult
+
+            if not pu.ativo:
+                self.powerups_ativos.remove(pu)
+
+        # 6) TIMER crescente (runner infinito)
+        self.timer_crescente += tempo_decorrido
+
+        # 7) STATUS (i-frames/power-ups) + reversões quando expiram
+        self.status.atualizar(tempo_decorrido)
+
+        ativos = self.status.powerups.keys()
+
+        # tamanho volta ao normal quando nenhum power de tamanho estiver ativo
+        if TAM_MAIOR not in ativos and TAM_MENOR not in ativos:
+            if getattr(self.player, "size_mult", 1.0) != 1.0:
+                self.player.reset_size()
+
+        # velocidade do mundo volta ao normal quando nenhum de velocidade estiver ativo
+        if VEL_MENOR not in ativos and VEL_MAIOR not in ativos:
+            if self.world_speed_mult != 1.0:
+                self.world_speed_mult = 1.0
+
+        # colisão com obstáculos (depois dos efeitos, pois invencibilidade pode estar ativa)
         if verificar_colisoes(self.player, self.obstaculos):
-            if self.status.sofrer_dano(1, iframes=0.8):   # Status cuida dos i-frames
+            if self.status.sofrer_dano(1, iframes=0.8):
                 self.obstaculos.clear()
                 if hasattr(self.spawner, "bloquear"):
                     self.spawner.bloquear(0.8)
             if self.status.game_over:
                 self.estado = ESTADO_GAMEOVER
-
-        # ----- POWER-UPS EM CENA -----
-        self.spawner_power.atualizar(tempo_decorrido, self.powerups_ativos)
-        for pu in self.powerups_ativos[:]:
-            pu.atualizar(tempo_decorrido)
-
-            # coleta e aplicação de efeito
-            if pu.rect.colliderect(self.player.rect):
-                efeito = pu.coletar(self.status, self.player)  # pode retornar (mult, dur) para velocidade
-                pu.ativo = False
-
-                # efeitos de velocidade do "mundo"
-                if efeito is not None:
-                    mult, dur = efeito
-                    self.world_speed_mult = mult  # 0.75 (redução) ou 1.25 (aumento)
-
-            if not pu.ativo:
-                self.powerups_ativos.remove(pu)
-
-        # timer da fase + atualização de status (i-frames, power-ups)
-        self.timer_restante = max(0.0, self.timer_restante - tempo_decorrido)
-        self.status.atualizar(tempo_decorrido)
-
-        # Reversões de efeitos quando expiram:
-        ativos = self.status.powerups.keys()
-
-        # Tamanho: volta ao normal se nenhum power de tamanho estiver ativo
-        if TAM_MAIOR not in ativos and TAM_MENOR not in ativos:
-            if getattr(self.player, "size_mult", 1.0) != 1.0:
-                self.player.reset_size()
-
-        # Velocidade global: volta ao normal se nenhum de velocidade estiver ativo
-        if VEL_MENOR not in ativos and VEL_MAIOR not in ativos:
-            if self.world_speed_mult != 1.0:
-                self.world_speed_mult = 1.0
-
-        # if self.timer_restante <= 0: self.estado = ESTADO_GAMEOVER
 
     # ---------------- DESENHO ----------------
     def _desenhar(self):
@@ -191,12 +192,12 @@ class Jogo:
         else:
             self.player.desenhar(self.tela)
 
-        # HUD (pontos esq., timer centro, vidas dir., power-ups abaixo)
+        # HUD (pontos esq., TIMER CRESCENTE centro, vidas dir., power-ups abaixo)
         self.hud.desenhar(
             self.tela,
             vidas=self.status.vidas,
             pontos=int(self.status.pontos),
-            timer_seg=self.timer_restante,
+            timer_seg=self.timer_crescente,
             powerups=list(self.status.powerups.keys())
         )
 
@@ -231,7 +232,7 @@ class Jogo:
         # reset de status e timers
         self.status.resetar()
         self.pause = False
-        self.timer_restante = self.timer_total
+        self.timer_crescente = 0.0
 
         # dificuldade e relógio da PARTIDA
         self.t0_ms = pygame.time.get_ticks()
