@@ -1,0 +1,15 @@
+LARGURA, ALTURA = 960, 540
+FPS = 60
+
+# Física
+GRAVIDADE = 2400      # px/s²
+FORCA_PULO = -900     # px/s
+VEL_HORIZONTAL = 320  # px/s
+
+# Cores
+COR_BG = (25, 25, 35)
+COR_CHAO = (70, 60, 50)
+COR_PLAYER = (80, 220, 120)
+COR_TXT = (240, 240, 240)
+COR_POWERUP = (200, 160, 255)
+COR_OBST = (160, 160, 100)
