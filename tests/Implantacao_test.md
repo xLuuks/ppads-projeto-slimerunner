@@ -48,8 +48,8 @@
 | **Caso de uso em que se baseia** | UC003 – Gerar e distribuir o executável |
 | **Cenário** | Compilação e envio do instalador |
 | **Preparação** | O código-fonte deve estar versionado no GitHub e o PyInstaller configurado. |
-| **Passos para execução do teste** | 1. Executar o comando `pyinstaller SlimeRunner.py --onefile`.<br>2. Verificar geração do `.exe`.<br>3. Criar instalador no Inno Setup.<br>4. Publicar arquivo no GitHub/Drive. |
-| **Resultado esperado** | O arquivo `SlimeRunner-Setup.exe` deve ser gerado (25–40 MB) e publicado corretamente. |
+| **Passos para execução do teste** | 1. Executar o comando `pyinstaller SlimeRunner.py --onefile`.<br>2. Verificar geração do `.exe`.<br>3. Criar instalador no Inno Setup.<br>4. |
+| **Resultado esperado** | O arquivo `SlimeRunner-Setup.exe` deve ser gerado (25–40 MB)  |
 | **Resultado do teste** | ☐ NÃO EXECUTADO ☐ SUCESSO ☐ FALHA ☐ CANCELADO |
 | **Descrição do resultado obtido** |  |
 | **Data da última execução do teste** |  |
