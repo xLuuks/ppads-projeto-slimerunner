@@ -1,5 +1,5 @@
 
-# 🧪 Plano de Teste — TC-005 Exibir Pontuação Final
+#  Plano de Teste — TC-005 Exibir Pontuação Final
 
 **Projeto:** Slime Runner  
 **Versão:** 1.0  
@@ -25,3 +25,4 @@
 - O valor mostrado é obtido de `status.pontos`, atualizado durante o loop principal (`Status.adicionar_pontos()`).  
 - A função de exibição é chamada durante o estado `ESTADO_GAMEOVER`, antes da reinicialização.  
 - Deve-se confirmar que o texto é centralizado na tela (`pygame.display`) e atualizado com `pygame.display.flip()`.
+
