@@ -71,10 +71,3 @@
 | **Data da última execução do teste** |  |
 
 ---
-
-## 5. Observações Gerais
-- Todos os testes devem ser realizados no ambiente Windows 10/11 (64-bit).  
-- É recomendado reiniciar o sistema entre os testes de instalação e execução.  
-- Registre qualquer falha com captura de tela e descrição detalhada.
-
----
