@@ -6,4 +6,4 @@
 
 ## Plano de Testes
 
-Os testes de cenário estão disponíveis na pasta [`/tests`](./tests):
+Os testes de cenário estão disponíveis na pasta [`/tests`](./tests)
