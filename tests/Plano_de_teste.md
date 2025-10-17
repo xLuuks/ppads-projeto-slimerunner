@@ -1,7 +1,7 @@
 # Plano e Scripts de Teste de Cenário – Slime Runner
 **Componente Curricular:** Práticas Profissionais em Análise e Desenvolvimento de Sistemas  
 **Equipe:** Eduardo Afonso P. Ferreira, Bruno Otavio Ramos, João Rinaldo França Neris, Lucas Augusto Correia Alves, Rodrigo Luiz Gomes da Silva
-**Data:** 16/10/2025
+**Data:** 16/10/2025   
 **Versão:** 2.0   
 **Linguagem:** Python 3.12+  
 **Bibliotecas:** Pygame  
