@@ -1,5 +1,5 @@
 
-# 🧪 Plano de Teste — TC-006 Reiniciar Jogo
+#  Plano de Teste — TC-006 Reiniciar Jogo
 
 **Projeto:** Slime Runner  
 **Versão:** 1.0  
@@ -16,3 +16,4 @@
 | **Resultado esperado** | - O evento de tecla `pygame.KEYDOWN` para ENTER/ESPAÇO é capturado.<br>- O jogo redefine `status.vidas = 3`, `status.pontos = 0` e `status.game_over = False`.<br>- O estado é alterado para `ESTADO_JOGANDO` e o cenário é reiniciado (função `reiniciar_jogo()` é chamada).<br>- A nova partida começa normalmente. |
 | **Resultado do teste** | ☐ NÃO EXECUTADO ☐ SUCESSO ☐ FALHA ☐ CANCELADO |
 | **Descrição do resultado obtido** | 
+
