@@ -2,9 +2,8 @@
 
 **Componente Curricular:** Práticas Profissionais em Análise e Desenvolvimento de Sistemas  
 **Equipe:** Eduardo Afonso P. Ferreira, Bruno Otavio Ramos, João Rinaldo França Neris, Lucas Augusto Correia Alves, Rodrigo Luiz Gomes da Silva  
-**Versão:** 1.0  
 **Data:** 16/10/2025  
-**Ferramentas:** Python 3.13+, Pygame, PyInstaller, Inno Setup
+**Ferramentas:** Python 3.12+, Pygame, PyInstaller, Inno Setup
 
 ---
 
