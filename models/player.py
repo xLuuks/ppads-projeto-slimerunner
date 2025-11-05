@@ -2,9 +2,9 @@ import pygame
 from settings import ALTURA, GRAVIDADE, FORCA_PULO, VEL_HORIZONTAL, COR_PLAYER, LARGURA
 
 class Player:
-    LARG = 60
-    ALT = 60
-    CHAO_Y = ALTURA - 100
+    LARG = 90
+    ALT = 90
+    CHAO_Y = ALTURA - 80
 
     def __init__(self):
         # multiplicadores (power-ups)

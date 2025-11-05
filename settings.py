@@ -3,7 +3,7 @@ FPS = 60
 
 # Física
 GRAVIDADE = 2400      # px/s²
-FORCA_PULO = -900     # px/s
+FORCA_PULO = -1000     # px/s
 VEL_HORIZONTAL = 320  # px/s
 
 # Cores
