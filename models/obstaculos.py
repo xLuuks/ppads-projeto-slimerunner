@@ -3,11 +3,16 @@ import pygame
 from settings import LARGURA, COR_OBST
 from models.player import Player
 
+
+OBST_IMGS: dict[str, pygame.Surface] = {}
 # Catálogo simples (ajuste tamanhos se quiser)
 CATALOGO_OBST = {
-    "tronco_baixo": {"w": 70, "h": 40, "y_offset": 0},
-    "pedra":        {"w": 50, "h": 50, "y_offset": 0},
-    "tronco_alto":  {"w": 60, "h": 90, "y_offset": 0},
+    "tronco_baixo": {"w": 120, "h": 75, "y_offset": -10},
+    "pedra":        {"w": 100,  "h": 90, "y_offset": -10},
+    "tronco_alto":  {"w": 120, "h": 120, "y_offset": -10},
+    "arbusto_de_espinhos": {"w":200,"h": 40, "y_offset": -10},
+    "cogumelo_venenoso": {"w": 60, "h": 60, "y_offset": -10},
+    "poca": {"w":200 ,"h": 60,"y_offset":-35}
 }
 
 class Obstaculo:
@@ -22,12 +27,22 @@ class Obstaculo:
         self.rect = pygame.Rect(x_inicial, y, w, h)
         self.velocidade = float(velocidade)
 
+        # pega imagem correspondente, se existir
+        base_img = OBST_IMGS.get(tipo)
+        if base_img is not None:
+            self.image = pygame.transform.smoothscale(base_img, (w, h))
+        else:
+            self.image = None
+
     def atualizar(self, dt: float):
         # IMPORTANTE: usa self.velocidade (injeção do game.py)
         self.rect.x -= int(self.velocidade * dt)
 
     def desenhar(self, tela: pygame.Surface):
-        pygame.draw.rect(tela, COR_OBST, self.rect, border_radius=6)
+        if self.image is not None:
+            tela.blit(self.image, self.rect.topleft)
+        else:
+            pygame.draw.rect(tela, COR_OBST, self.rect, border_radius=6)
 
     def saiu_da_tela(self) -> bool:
         return self.rect.right < 0
