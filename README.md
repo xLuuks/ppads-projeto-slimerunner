@@ -7,3 +7,5 @@
 ## Plano de Testes
 
 Os testes de cenário estão disponíveis na pasta [`/tests`](./tests)
+
+Atualização para atividade A5 – Praticando.
