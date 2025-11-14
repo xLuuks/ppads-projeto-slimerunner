@@ -1,3 +1,5 @@
+# Comentário adicionado para atividade A5
+
 import sys
 import pygame
 
