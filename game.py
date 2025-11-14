@@ -1,3 +1,5 @@
+Pequenas alterações para atividade A5
+
 import sys
 import os
 import pygame
