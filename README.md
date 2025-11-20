@@ -104,4 +104,4 @@ ppads-projeto-slimerunner/
 | **Release da Iteração 2 (Tag v2)** | `https://github.com/xLuuks/ppads-projeto-slimerunner/releases/tag/v2` |
 | **Documento de Especificação** | `https://docs.google.com/document/d/1UqacSleu4xvELOUO9Nx33Oy0VybCQs3tF7A5_9G-jVM/edit?tab=t.0` |
 |**Link do Video de Apresentação**|`https://drive.google.com/file/d/17PK3Hqmxg6t2IFCy6YQrczqHEXO4p2oi/view?usp=drivesdk`|
-
+|**Link do Video de Apresentação**|`https://drive.google.com/file/d/1CE2aKGGxvH2TJuZzJSBpKhU-kFD_e2I8/view?usp=drive_link`|
