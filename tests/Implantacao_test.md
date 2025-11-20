@@ -17,9 +17,9 @@
 | **Preparação (condição do sistema antes do teste)** | O arquivo `SlimeRunner-Setup.exe` deve estar disponível no diretório de testes. O PC deve possuir Windows 10/11 (64-bit) e 100 MB livres. |
 | **Passos para execução do teste** | 1. Executar o instalador.<br>2. Aceitar os termos e prosseguir.<br>3. Selecionar diretório padrão de instalação.<br>4. Finalizar e criar atalho na área de trabalho. |
 | **Resultado esperado** | O jogo deve ser instalado em `C:\Program Files\Slime Runner\` e o atalho criado no Desktop. |
-| **Resultado do teste** | ☐ NÃO EXECUTADO ☐ SUCESSO ☐ FALHA ☐ CANCELADO |
-| **Descrição do resultado obtido** |  |
-| **Data da última execução do teste** |  |
+| **Resultado do teste** | ☐ NÃO EXECUTADO ☒ SUCESSO ☐ FALHA ☐ CANCELADO |
+| **Descrição do resultado obtido** | Instalação concluída sem erros. Pasta criada em `C:\Program Files\Slime Runner\` e atalho disponível na área de trabalho. |
+| **Data da última execução do teste** | 20/11/2025 |
 
 ---
 
@@ -33,9 +33,9 @@
 | **Preparação** | O jogo deve estar instalado e o atalho criado. |
 | **Passos para execução do teste** | 1. Clicar no atalho “Slime Runner”.<br>2. Verificar se a tela inicial é exibida.<br>3. Testar o início da partida.<br>4. Fechar o jogo com ESC. |
 | **Resultado esperado** | O jogo deve abrir em resolução 960x540 @ 60FPS, apresentando a tela inicial e funcionando sem erros. |
-| **Resultado do teste** | ☐ NÃO EXECUTADO ☐ SUCESSO ☐ FALHA ☐ CANCELADO |
-| **Descrição do resultado obtido** |  |
-| **Data da última execução do teste** |  |
+| **Resultado do teste** | ☐ NÃO EXECUTADO ☒ SUCESSO ☐ FALHA ☐ CANCELADO |
+| **Descrição do resultado obtido** | O jogo iniciou corretamente, exibiu a tela inicial, permitiu iniciar a partida e foi finalizado pela tecla ESC sem travamentos. |
+| **Data da última execução do teste** | 20/11/2025 |
 
 ---
 
@@ -49,9 +49,9 @@
 | **Preparação** | O código-fonte deve estar versionado no GitHub e o PyInstaller configurado. |
 | **Passos para execução do teste** | 1. Executar o comando `pyinstaller SlimeRunner.py --onefile`.<br>2. Verificar geração do `.exe`.<br>3. Criar instalador no Inno Setup.<br>4. Publicar arquivo no GitHub/Drive. |
 | **Resultado esperado** | O arquivo `SlimeRunner-Setup.exe` deve ser gerado (25–40 MB) e publicado corretamente. |
-| **Resultado do teste** | ☐ NÃO EXECUTADO ☐ SUCESSO ☐ FALHA ☐ CANCELADO |
-| **Descrição do resultado obtido** |  |
-| **Data da última execução do teste** |  |
+| **Resultado do teste** | ☐ NÃO EXECUTADO ☒ SUCESSO ☐ FALHA ☐ CANCELADO |
+| **Descrição do resultado obtido** | O executável foi gerado via PyInstaller, empacotado em instalador pelo Inno Setup e enviado com sucesso para o repositório/armazenamento definido pelo grupo. |
+| **Data da última execução do teste** | 20/11/2025 |
 
 ---
 
@@ -65,8 +65,6 @@
 | **Preparação** | O jogo deve estar em execução em modo normal (sem depuração). |
 | **Passos para execução do teste** | 1. Iniciar o jogo.<br>2. Medir o FPS médio durante 60 segundos.<br>3. Registrar variações. |
 | **Resultado esperado** | O FPS deve se manter estável em **60 FPS** com variação máxima de ±5 FPS. |
-| **Resultado do teste** | ☐ NÃO EXECUTADO ☐ SUCESSO ☐ FALHA ☐ CANCELADO |
-| **Descrição do resultado obtido** |  |
-| **Data da última execução do teste** |  |
-
----
+| **Resultado do teste** | ☐ NÃO EXECUTADO ☒ SUCESSO ☐ FALHA ☐ CANCELADO |
+| **Descrição do resultado obtido** | Durante 60 segundos de jogo, o FPS se manteve próximo de 60, com pequenas oscilações dentro da faixa esperada (±5 FPS), sem travamentos ou quedas bruscas. |
+| **Data da última execução do teste** | 20/11/2025 |
